@@ -1,0 +1,17 @@
+consultar gênero freebase:
+
+[{
+  "type": "/music/artist",
+  "name": "nirvana",
+  "genre": [],
+  "limit": 3
+}]
+
+consultar nome pelo gênero
+
+[{
+  "type": "/music/artist",
+  "name": [],
+  "genre": "pop rock",
+  "limit": 3
+}]
