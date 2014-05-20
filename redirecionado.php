@@ -40,6 +40,9 @@ try {
 
         echo "</br></br></br>";
 
+        
+
+
         $user_profile = $facebook->api('/me','GET');
 
         $response = $facebook->api("/me/music");
@@ -82,10 +85,7 @@ try {
 
 
                 
-                 foreach ($response3 as $topic3) {             
-                    var_dump($topic);
-                      
-                  }
+                 
 
            }
 
@@ -198,30 +198,73 @@ try {
                             </li>
                         </ul>
                     </div>
+                    
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div id="modalbox">
-    <div class="devoops-modal">
-        <div class="devoops-modal-header">
-            <div class="modal-header-name">
-                <span>Basic table</span>
-            </div>
-            <div class="box-icons">
-                <a class="close-link">
-                    <i class="fa fa-times"></i>
-                </a>
+    </header>
             </div>
         </div>
-        <div class="devoops-modal-inner">
-        </div>
-        <div class="devoops-modal-bottom">
-        </div>
-    </div>
-</div>
-</header>
+
+       <div class="box-content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bandas Curtidas</th>
+                            <th>Generos da Banda</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    <?php 
+
+                     $user_profile = $facebook->api('/me','GET');
+
+                    $response = $facebook->api("/me/music");
+
+                    $count = 0;
+
+                    foreach ($response['data'] as $music) {
+
+                        $query = array(array('id' => NULL, 'name' => $music['name'], 'genre' => [] , 'type' => '/music/artist'));
+                        $service_url = 'https://www.googleapis.com/freebase/v1/mqlread';
+                        $params = array(
+                                'query' => json_encode($query)
+                        );
+                        $url = $service_url . '?' . http_build_query($params);
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        $response = json_decode(curl_exec($ch), true);
+                        curl_close($ch);
+
+                        foreach ($response as $topic) {             
+                            var_dump($topic);
+                      
+                    };
+
+                        $count++;
+                        
+
+
+
+                    ?>
+                            
+                        <tr>
+                        <td><?php echo $count; ?></td>
+                        <td><?php echo $music['name']; ?></td>
+                        </tr>
+
+
+                    <?php }; ?>
+
+
+                     
+
+                    </tbody>
+                </table>
+            </div>
+
 
 
 
