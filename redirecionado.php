@@ -37,20 +37,15 @@
 
 
 try {
-
-        echo "</br></br></br>";
-
-        
+ 
 
 
         $user_profile = $facebook->api('/me','GET');
 
         $response = $facebook->api("/me/music");
 
-        echo "Bandas Curtidas: " . "</br></br>";
-
         foreach ($response['data'] as $music) {
-            echo $music['name'] . " </br> ";
+        
 
             $query = array(array('id' => NULL, 'name' => $music['name'], 'genre' => [] , 'type' => '/music/artist'));
             $service_url = 'https://www.googleapis.com/freebase/v1/mqlread';
