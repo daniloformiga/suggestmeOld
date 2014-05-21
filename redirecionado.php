@@ -234,7 +234,7 @@ try {
                         curl_close($ch);
 
                         foreach ($response as $topic) {             
-                            var_dump($topic);
+                            var_dump($topic[0]["name"][0]);
                       
                     };
 
