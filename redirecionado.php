@@ -293,7 +293,7 @@ try {
 
                             for($i = 0; $i < $length; $i++) {
                                  echo "<td>" . $imprimirTamanho . "</td>";
-                                 echo "<td>" . $bandas[$i] . "</td>";
+                                 echo "<td>" . $bandas[$i] . "  <a href='#'><img src=img/like.png></td></a>";
                                  echo '</tr>';
                                  $imprimirTamanho++;
                             }
