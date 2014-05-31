@@ -38,7 +38,7 @@
 
 try {
  
-
+        echo "<br>";
 
         $user_profile = $facebook->api('/me','GET');
 
@@ -59,34 +59,34 @@ try {
             $response = json_decode(curl_exec($ch), true);
             curl_close($ch);
 
+  
 
             foreach ($response['result'] as $topic) {
               
+                if(!empty($topic['genre'][0])){
 
-                $query3 = array(array('id' => NULL, 'name' => [], 'genre' => $topic['genre'][0] , 'type' => '/music/artist', 'limit' => 3));
-
-
-                $service_url3= 'https://www.googleapis.com/freebase/v1/mqlread';
-                $params3 = array(
-                        'query' => json_encode($query3)
-                );
-
-                $url3 = $service_url3 . '?' . http_build_query($params3);
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url3);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                $response3 = json_decode(curl_exec($ch), true);
-                curl_close($ch);
+                    $query3 = array(array('id' => NULL, 'name' => [], 'genre' => $topic['genre'][0] , 'type' => '/music/artist', 'limit' => 3));
 
 
+                    $service_url3= 'https://www.googleapis.com/freebase/v1/mqlread';
+                    $params3 = array(
+                            'query' => json_encode($query3)
+                    );
+
+                    $url3 = $service_url3 . '?' . http_build_query($params3);
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url3);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    $response3 = json_decode(curl_exec($ch), true);
+                    curl_close($ch);
+
+
+                }
                 
-                 
 
            }
 
         }
-
-        echo '</br> <a href="logout.php">Logout</a>';
         
 
 
@@ -144,49 +144,21 @@ try {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle account" data-toggle="dropdown">
                                     <div class="avatar">
-                                        <img src="img/avatar.jpg" class="img-rounded" alt="avatar" />
+                                        <img src=<?php echo "http://graph.facebook.com/" . $user_profile['id'] . "/picture" ?> class="img-rounded" alt="avatar" />
                                     </div>
                                     <i class="fa fa-angle-down pull-right"></i>
                                     <div class="user-mini pull-right">
                                         <span class="welcome">Bem vindo,</span>
-                                        <span><?php echo $user_profile['name']; ?></span>
+                                        <span><?php echo $user_profile['name']; ?> </span>
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu">
+                            
                                     <li>
-                                        <a href="#">
-                                            <i class="fa fa-user"></i>
-                                            <span class="hidden-sm text">Profile</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="ajax/page_messages.html" class="ajax-link">
-                                            <i class="fa fa-envelope"></i>
-                                            <span class="hidden-sm text">Messages</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="ajax/gallery_simple.html" class="ajax-link">
-                                            <i class="fa fa-picture-o"></i>
-                                            <span class="hidden-sm text">Albums</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="ajax/calendar.html" class="ajax-link">
-                                            <i class="fa fa-tasks"></i>
-                                            <span class="hidden-sm text">Tasks</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-cog"></i>
-                                            <span class="hidden-sm text">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
+                                        <a href="logout.php">
                                             <i class="fa fa-power-off"></i>
-                                            <span class="hidden-sm text">Logout</span>
+                                            <span class="hidden-sm text">Logout</a></span>
+                                            
                                         </a>
                                     </li>
                                 </ul>
@@ -206,7 +178,6 @@ try {
                         <tr>
                             <th>#</th>
                             <th>Bandas Curtidas</th>
-                            <th>Generos da Banda</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -215,9 +186,12 @@ try {
 
                      $user_profile = $facebook->api('/me','GET');
 
-                    $response = $facebook->api("/me/music");
+                     $response = $facebook->api("/me/music");
 
-                    $count = 0;
+                     $count = 0;
+                     $bandas = array();
+                     $contadorArray = 0;
+                     $imprimirArray = 0;
 
                     foreach ($response['data'] as $music) {
 
@@ -230,15 +204,59 @@ try {
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, $url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        $response = json_decode(curl_exec($ch), true);
+                        $response2 = json_decode(curl_exec($ch), true);
                         curl_close($ch);
 
-                        foreach ($response as $topic) {             
-                            var_dump($topic[0]["name"][0]);
+                        foreach ($response2 as $topic) {
+
+                            
+
+                            
+
+                                if(!empty($topic[0]['genre'][$count])){
+                                    
+
+                                    $query = array(array('id' => NULL, 'name' => [], 'genre' => $topic[0]['genre'][0] , 'type' => '/music/artist', 'limit' => 3));
+                                    $service_url = 'https://www.googleapis.com/freebase/v1/mqlread';
+                                    $params = array(
+                                            'query' => json_encode($query)
+                                    );
+                                    $url = $service_url . '?' . http_build_query($params);
+                                    $ch = curl_init();
+                                    curl_setopt($ch, CURLOPT_URL, $url);
+                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                                    $response3 = json_decode(curl_exec($ch), true);
+                                    curl_close($ch);
+
+
+                                    foreach ($response3 as $genre) {
+
+                                        if(!empty($genre[$count]['name'][0])){
+                                            
+                                            $bandas[$contadorArray] = $genre[$count]['name'][0];
+
+                                            $contadorArray++;
+
+                                            
+
+                                        }
+
+
+                                }
+
+                                
+                                    
+
+
+                                };
+                            
+
                       
                     };
 
+
                         $count++;
+                        
                         
 
 
@@ -248,10 +266,39 @@ try {
                         <tr>
                         <td><?php echo $count; ?></td>
                         <td><?php echo $music['name']; ?></td>
+                        
+                        
                         </tr>
 
 
-                    <?php }; ?>
+                    <?php }; 
+
+                    ?>
+
+                    <?php 
+
+                    $length = count($bandas);
+                    $imprimirTamanho = 1;
+
+                     echo '<div class="box-content">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                        <th width=138>#</th>
+                                        <th>Bandas Sugeridas</th>
+                                        </tr>
+                                    </thead>
+                            <tbody>
+                                <tr>';
+
+                            for($i = 0; $i < $length; $i++) {
+                                 echo "<td>" . $imprimirTamanho . "</td>";
+                                 echo "<td>" . $bandas[$i] . "</td>";
+                                 echo '</tr>';
+                                 $imprimirTamanho++;
+                            }
+
+                    ?>
 
 
                      
@@ -259,6 +306,16 @@ try {
                     </tbody>
                 </table>
             </div>
+
+            <script src="plugins/jquery/jquery-2.1.0.min.js"></script>
+            <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+            <!-- Include all compiled plugins (below), or include individual files as needed -->
+            <script src="plugins/bootstrap/bootstrap.min.js"></script>
+            <script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script>
+            <script src="plugins/tinymce/tinymce.min.js"></script>
+            <script src="plugins/tinymce/jquery.tinymce.min.js"></script>
+            <!-- All functions for this theme + document.ready processing -->
+            
 
 
 
